@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Noorpur Public School | Interactive Kiosk</title>
+<style>
+:root{--navy:#10284b;--blue:#2459a9;--gold:#f1b84b;--cream:#f7f5ef;--ink:#17253a;--muted:#63718a;--white:#fff;--shadow:0 18px 50px #10284b18}
+*{box-sizing:border-box}body{margin:0;font-family:Inter,"Segoe UI",Arial,sans-serif;background:var(--cream);color:var(--ink)}
+button{font:inherit;cursor:pointer}button:focus-visible{outline:3px solid var(--gold);outline-offset:3px}
+.topbar{height:76px;background:var(--navy);color:white;display:flex;align-items:center;justify-content:space-between;padding:0 clamp(18px,4vw,60px);gap:18px}
+.brand{display:flex;align-items:center;gap:13px}.crest{width:48px;height:48px;border:2px solid var(--gold);border-radius:50%;display:grid;place-items:center;color:var(--gold);font-weight:900;font-size:13px;letter-spacing:1px}
+.brand strong{display:block;font-size:clamp(15px,2vw,21px);letter-spacing:.4px}.brand small{display:block;color:#cbd8ed;margin-top:3px;letter-spacing:1.5px;font-size:10px}
+.top-actions{display:flex;gap:10px}.small-btn{border:1px solid #ffffff55;background:#ffffff12;color:white;border-radius:12px;padding:10px 13px}
+main{max-width:1400px;margin:auto;padding:clamp(18px,4vw,48px)}
+.screen{display:none}.screen.active{display:block;animation:appear .25s ease}@keyframes appear{from{opacity:.2;transform:translateY(7px)}to{opacity:1;transform:none}}
+.hero{position:relative;overflow:hidden;border-radius:28px;background:linear-gradient(120deg,#10284b 0%,#1f4b85 70%,#3374a9 100%);color:white;padding:clamp(28px,6vw,76px);min-height:350px;display:flex;align-items:center;box-shadow:var(--shadow)}
+.hero:after{content:"";position:absolute;width:360px;height:360px;border:1px solid #ffffff22;border-radius:50%;right:-80px;top:-100px;box-shadow:0 0 0 38px #ffffff08,0 0 0 80px #ffffff06}
+.hero-content{position:relative;z-index:1;max-width:780px}.eyebrow{color:var(--gold);text-transform:uppercase;letter-spacing:3px;font-size:12px;font-weight:800}
+h1{font-size:clamp(34px,5.5vw,66px);line-height:1.06;margin:15px 0 18px;letter-spacing:-1.5px}.hero p{font-size:clamp(16px,2vw,20px);line-height:1.65;color:#e0e9f7;max-width:650px}
+.hero-buttons{display:flex;flex-wrap:wrap;gap:15px;margin-top:30px}.primary,.secondary{border:0;border-radius:14px;padding:16px 23px;font-weight:800;min-height:56px}.primary{background:var(--gold);color:#1a2c43}.secondary{background:#ffffff16;color:white;border:1px solid #ffffff70}.primary:hover{background:#ffd274}.secondary:hover{background:#ffffff2c}
+.info-strip{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:22px}.info-card{background:white;padding:22px;border-radius:18px;box-shadow:var(--shadow)}.info-card strong{font-size:25px;color:var(--blue);display:block}.info-card span{color:var(--muted);font-size:13px}
+.section-head{display:flex;align-items:end;justify-content:space-between;gap:16px;margin:10px 0 26px;flex-wrap:wrap}.section-head h2{font-size:clamp(28px,4vw,42px);margin:0;color:var(--navy)}.section-head p{color:var(--muted);margin:8px 0 0}.back{background:white;border:1px solid #d8dfeb;border-radius:12px;padding:12px 17px;color:var(--navy);font-weight:700}
+.faculty-grid,.facility-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:20px}.person-card,.facility-card{background:white;border-radius:20px;overflow:hidden;box-shadow:var(--shadow);border:1px solid #e9edf3;transition:transform .2s,box-shadow .2s}.person-card:hover,.facility-card:hover{transform:translateY(-4px);box-shadow:0 22px 50px #10284b20}
+.person-card{padding:18px;text-align:left;border:1px solid #e9edf3;color:inherit;width:100%}.portrait{height:190px;border-radius:14px;background:linear-gradient(145deg,#e2eaf5,#c3d3e9);display:grid;place-items:center;overflow:hidden;position:relative}.portrait img{width:100%;height:100%;object-fit:cover}.avatar{width:100px;height:100px;border-radius:50%;display:grid;place-items:center;background:#ffffffbb;color:var(--blue);font-size:30px;font-weight:900;border:4px solid #ffffff99}.tap-hint{position:absolute;right:10px;bottom:10px;background:#10284be8;color:white;border-radius:9px;padding:7px 10px;font-size:11px}
+.person-card h3{margin:16px 0 5px;font-size:21px}.role{color:var(--blue);font-size:13px;font-weight:800}.person-card p{color:var(--muted);font-size:14px;line-height:1.5;margin-bottom:0}
+.facility-card{border:0;text-align:left;color:inherit;padding:0;width:100%}.facility-art{height:150px;background:linear-gradient(135deg,#e8eef7,#c9d9ee);display:grid;place-items:center;font-size:54px}.facility-copy{padding:18px}.facility-copy h3{margin:0 0 8px;font-size:20px}.facility-copy p{color:var(--muted);font-size:14px;line-height:1.5;margin:0}
+.tour-layout{display:grid;grid-template-columns:1.15fr .85fr;gap:20px}.map-panel,.tour-note{background:white;border-radius:20px;overflow:hidden;box-shadow:var(--shadow)}.map-panel iframe{width:100%;height:390px;border:0;display:block}.map-caption{padding:17px 20px;color:var(--muted);font-size:13px}.tour-note{padding:26px}.tour-note h3{margin-top:0;color:var(--navy);font-size:24px}.tour-note li{margin:12px 0;line-height:1.5}.tour-note .primary{margin-top:12px}
+footer{text-align:center;color:#778399;font-size:12px;padding:25px 10px 8px}
+.modal-wrap{position:fixed;inset:0;background:#08172dcc;display:none;align-items:center;justify-content:center;padding:18px;z-index:10}.modal-wrap.open{display:flex}.modal{width:min(850px,100%);max-height:92vh;overflow:auto;background:white;border-radius:24px;box-shadow:0 30px 100px #0005}.modal-top{background:var(--navy);color:white;padding:22px 26px;display:flex;justify-content:space-between;align-items:center;gap:15px}.modal-top h2{margin:0;font-size:24px}.close{background:#ffffff20;border:1px solid #ffffff55;color:white;border-radius:10px;padding:8px 12px;font-size:20px}.modal-body{padding:26px;display:grid;grid-template-columns:220px 1fr;gap:25px}.modal-portrait{height:240px;border-radius:16px;background:linear-gradient(145deg,#e2eaf5,#c3d3e9);display:grid;place-items:center;overflow:hidden}.modal-portrait img{width:100%;height:100%;object-fit:cover}.modal-body h3{margin:0 0 5px;color:var(--navy);font-size:27px}.modal-body .role{margin-bottom:15px}.quote{font-size:17px;line-height:1.65;background:#f5f7fb;border-left:4px solid var(--gold);padding:15px 17px;border-radius:0 12px 12px 0;margin:15px 0}.timetable{border-collapse:collapse;width:100%;font-size:13px;margin-top:10px}.timetable th,.timetable td{padding:9px;border:1px solid #e2e7ef;text-align:left}.timetable th{background:#eef3fa}.modal-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:17px}.modal-actions button{border:0;border-radius:11px;padding:12px 15px;font-weight:700}.speak{background:var(--blue);color:white}.stop{background:#e8edf5;color:var(--navy)}
+@media(max-width:850px){.faculty-grid,.facility-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.tour-layout{grid-template-columns:1fr}.modal-body{grid-template-columns:160px 1fr}.modal-portrait{height:190px}}
+@media(max-width:560px){.topbar{height:auto;padding:13px 16px}.brand small{display:none}.top-actions .small-btn{font-size:12px;padding:8px}.faculty-grid,.facility-grid,.info-strip{grid-template-columns:1fr}.hero{min-height:unset}.portrait{height:220px}.modal-body{grid-template-columns:1fr}.modal-portrait{height:220px}.section-head{align-items:start}}
+</style>
+</head>
+<body>
+<header class="topbar">
+  <div class="brand"><div class="crest">NPS</div><div><strong>NOORPUR PUBLIC SCHOOL</strong><small>NURPUR · HIMACHAL PRADESH</small></div></div>
+  <div class="top-actions"><button class="small-btn" onclick="goHome()">⌂ Home</button><button class="small-btn" onclick="toggleFullScreen()">⛶ Full screen</button></div>
+</header>
+<main>
+  <section id="home" class="screen active">
+    <div class="hero"><div class="hero-content">
+      <div class="eyebrow">Welcome to our school</div>
+      <h1>Discover. Learn.<br>Grow together.</h1>
+      <p>Welcome to Noorpur Public School. Meet our educators, discover our learning spaces, and explore the facilities that support every learner.</p>
+      <div class="hero-buttons"><button class="primary" onclick="showScreen('faculty')">Faculty Info &nbsp; →</button><button class="secondary" onclick="showScreen('tour')">School Tour &nbsp; →</button></div>
+    </div></div>
+    <div class="info-strip">
+      <div class="info-card"><strong>Since 1992</strong><span>A journey of learning and growth</span></div>
+      <div class="info-card"><strong>CBSE</strong><span>Senior Secondary School</span></div>
+      <div class="info-card"><strong>Explore</strong><span>People, places and possibilities</span></div>
+    </div>
+  </section>
+  <section id="faculty" class="screen">
+    <div class="section-head"><div><h2>Meet Our Faculty</h2><p>Select a profile to read their message and hear it aloud.</p></div><button class="back" onclick="goHome()">← Back to home</button></div>
+    <div id="facultyGrid" class="faculty-grid"></div>
+    <p style="color:var(--muted);font-size:13px;margin-top:22px">Demo profiles are included to show how the kiosk works. Replace them with approved staff names, photos, subjects, timetables and messages before school use.</p>
+  </section>
+  <section id="tour" class="screen">
+    <div class="section-head"><div><h2>Explore Our School</h2><p>Discover the facilities and find the school location.</p></div><button class="back" onclick="goHome()">← Back to home</button></div>
+    <div class="tour-layout">
+      <div class="map-panel"><iframe title="Map to Noorpur Public School" loading="lazy" src="https://maps.google.com/maps?q=Noorpur%20Public%20School%2C%20Ward%20No.%202%2C%20Nurpur%2C%20Kangra%2C%20Himachal%20Pradesh&t=&z=15&ie=UTF8&iwloc=&output=embed"></iframe><div class="map-caption">Map preview · Noorpur Public School, Ward No. 2, Nurpur, District Kangra, Himachal Pradesh 176202</div></div>
+      <div class="tour-note"><h3>A place to learn and thrive</h3><p style="color:var(--muted);line-height:1.6">Explore learning spaces, creative activities and student support facilities.</p><ul><li>Library and reading resources</li><li>Science and computer laboratories</li><li>Music and dance rooms</li><li>Indoor games and outdoor sports</li><li>School transport facilities</li><li>Health and medical check-up support</li></ul><button class="primary" onclick="speakText('Welcome to Noorpur Public School. Our school supports learning through library resources, laboratories, music and dance rooms, indoor games, outdoor sports, transport and health support.')">🔊 Listen to school introduction</button></div>
+    </div>
+    <h2 style="color:var(--navy);margin:32px 0 18px">Our Facilities</h2><div id="facilityGrid" class="facility-grid"></div>
+    <p style="color:var(--muted);font-size:13px;margin-top:18px">Facility information is based on publicly available school website content. Please verify details and add campus-specific photos or a floor map before deployment.</p>
+  </section>
+  <footer>Interactive School Kiosk · Designed for a touchscreen display · Audio uses your device's built-in text-to-speech</footer>
+</main>
+<div class="modal-wrap" id="profileModal" role="dialog" aria-modal="true" aria-labelledby="modalName" onclick="if(event.target===this)closeModal()">
+  <div class="modal"><div class="modal-top"><h2>Faculty Profile</h2><button class="close" onclick="closeModal()" aria-label="Close">×</button></div><div id="modalBody" class="modal-body"></div></div>
+</div>
+<script>
+/* CUSTOMISE HERE: Replace demo faculty records with approved school information.
+   For photos, put image files in a folder named "photos" beside this HTML file
+   and set photo to e.g. "photos/principal.jpg". */
+const faculty = [
+ {name:"Anmol Dogra",role:"Principal",subject:"School Leadership",photo:"",initials:"AD",
+  message:"Education is a journey of curiosity, character and confidence. Let us work together to help every child discover their strengths, learn with purpose and grow into a responsible citizen.",
+  timetable:[["Leadership","School-wide guidance"],["Academic planning","As scheduled"],["Student & parent interaction","By appointment"]]},
+ {name:"Faculty Member 1",role:"PGT / TGT Teacher",subject:"Subject: Add subject",photo:"",initials:"FM",
+  message:"My aim is to make learning engaging, practical and meaningful. Every question is an opportunity to understand more, and every learner deserves encouragement to do their best.",
+  timetable:[["Period 1","Class / subject — edit"],["Period 2","Class / subject — edit"],["Period 3","Class / subject — edit"],["Period 4","Class / subject — edit"]]},
+ {name:"Faculty Member 2",role:"PRT Teacher",subject:"Subject: Add subject",photo:"",initials:"FM",
+  message:"A positive classroom is a place where children feel safe to ask questions, explore ideas and learn from mistakes. Together, we can make each school day a step forward.",
+  timetable:[["Period 1","Class / subject — edit"],["Period 2","Class / subject — edit"],["Period 3","Class / subject — edit"],["Period 4","Class / subject — edit"]]}
+];
+const facilities = [
+ {icon:"📚",name:"Library",desc:"A welcoming space for reading, reference books and independent learning."},
+ {icon:"🧪",name:"Laboratories",desc:"Practical learning facilities for science, mathematics and information technology."},
+ {icon:"💻",name:"Computer Room",desc:"Technology-supported learning to build digital skills."},
+ {icon:"🎵",name:"Music Room",desc:"Opportunities to explore singing and musical instruments."},
+ {icon:"🏃",name:"Sports & Games",desc:"Indoor games, outdoor play and activities that encourage teamwork."},
+ {icon:"🚌",name:"Transport",desc:"School transport facilities to support student travel."},
+ {icon:"💃",name:"Dance Room",desc:"Space for movement, expression and cultural activities."},
+ {icon:"🩺",name:"Health Support",desc:"Health and medical check-up support for student wellbeing."}
+];
+function showScreen(id){stopSpeech();document.querySelectorAll(".screen").forEach(s=>s.classList.remove("active"));document.getElementById(id).classList.add("active");window.scrollTo({top:0,behavior:"smooth"})}
+function goHome(){closeModal();showScreen("home")}
+function toggleFullScreen(){if(!document.fullscreenElement){document.documentElement.requestFullscreen?.()}else{document.exitFullscreen?.()}}
+function initials(name){return name.split(" ").map(x=>x[0]).slice(0,2).join("").toUpperCase()}
+function renderFaculty(){document.getElementById("facultyGrid").innerHTML=faculty.map((p,i)=>`<button class="person-card" onclick="openProfile(${i})"><div class="portrait">${p.photo?`<img src="${p.photo}" alt="${p.name}">`:`<div class="avatar">${p.initials||initials(p.name)}</div>`}<span class="tap-hint">Tap to explore ↗</span></div><h3>${p.name}</h3><div class="role">${p.role}</div><p>${p.subject}</p></button>`).join("")}
+function renderFacilities(){document.getElementById("facilityGrid").innerHTML=facilities.map(f=>`<div class="facility-card"><div class="facility-art">${f.icon}</div><div class="facility-copy"><h3>${f.name}</h3><p>${f.desc}</p></div></div>`).join("")}
+function openProfile(i){const p=faculty[i];stopSpeech();const timetable=p.timetable.map(r=>`<tr><td>${r[0]}</td><td>${r[1]}</td></tr>`).join("");document.getElementById("modalBody").innerHTML=`<div><div class="modal-portrait">${p.photo?`<img src="${p.photo}" alt="${p.name}">`:`<div class="avatar">${p.initials||initials(p.name)}</div>`}</div></div><div><h3 id="modalName">${p.name}</h3><div class="role">${p.role} · ${p.subject}</div><h4>Message / viewpoint</h4><div class="quote">${p.message}</div><h4>Timetable / schedule</h4><table class="timetable"><thead><tr><th>Period / activity</th><th>Details</th></tr></thead><tbody>${timetable}</tbody></table><div class="modal-actions"><button class="speak" onclick="speakText(${JSON.stringify(p.name+'. '+p.role+'. '+p.message+'. Timetable: '+p.timetable.map(r=>r.join(', ')).join('. '))})">🔊 Read aloud</button><button class="stop" onclick="stopSpeech()">■ Stop audio</button></div></div>`;document.getElementById("profileModal").classList.add("open")}
+function closeModal(){stopSpeech();document.getElementById("profileModal").classList.remove("open")}
+function speakText(text){if(!("speechSynthesis" in window)){alert("Text-to-speech is not supported in this browser. Try the latest Google Chrome.");return}stopSpeech();const u=new SpeechSynthesisUtterance(text);u.lang="en-IN";u.rate=.92;u.pitch=1;window.speechSynthesis.speak(u)}
+function stopSpeech(){if("speechSynthesis" in window)window.speechSynthesis.cancel()}
+document.addEventListener("keydown",e=>{if(e.key==="Escape")closeModal()});
+renderFaculty();renderFacilities();
+</script>
+</body>
+</html>
